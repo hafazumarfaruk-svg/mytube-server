@@ -1,0 +1,25 @@
+# Python 3.11 (লেটেস্ট) ব্যবহার করা হচ্ছে
+FROM python:3.11-slim
+
+# কাজের ডিরেক্টরি
+WORKDIR /app
+
+# Node.js এবং ffmpeg ইন্সটল করা হচ্ছে
+RUN apt-get update && \
+    apt-get install -y curl ffmpeg && \
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
+
+# yt-dlp ইন্সটল করা হচ্ছে
+RUN pip install -U yt-dlp
+
+# ফাইলগুলো কপি করা
+COPY package*.json ./
+RUN npm install
+COPY . .
+
+# পোর্ট ওপেন করা
+EXPOSE 7860
+
+# সার্ভার চালু করা
+CMD ["npm", "start"]
